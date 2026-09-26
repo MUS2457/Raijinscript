@@ -7,3 +7,14 @@ class Lexer :
         if self.position >= len(self.text) :
             return None
         return self.text[self.position]
+
+    def advance(self) :
+        self.position += 1
+
+    def skip_whiteSpace(self) :
+        while self.current_char() is not None :
+            if self.current_char() == " " :
+                self.advance()
+            else :
+                break
+        
