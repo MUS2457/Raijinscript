@@ -17,4 +17,16 @@ class Lexer :
                 self.advance()
             else :
                 break
-        
+
+    def read_identifier(self):
+        word = ""
+
+        while self.current_char() is not None:
+            if self.current_char().isalpha():
+                word += self.current_char()
+                self.advance()
+            else:
+                break
+
+        return word
+
