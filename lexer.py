@@ -5,10 +5,14 @@ class Lexer :
         self.OPERATORS = "+-*/=<>!"
 
 
-    def current_char(self) :
-        if self.position >= len(self.text) :
+    def current_char(self, offest = 0) :
+        pos = self.position + offest
+        if pos >= len(self.text) :
             return None
-        return self.text[self.position]
+        return self.text[pos]
+
+    def indexplus(self) :
+        return self.current_char(1)
 
     def advance(self) :
         self.position += 1
@@ -40,7 +44,7 @@ class Lexer :
 
     def operator_identifier(self):
         operators = ""
-        
+
         while self.current_char() is not None :
 
             if self.current_char() in self.OPERATORS :
@@ -53,5 +57,45 @@ class Lexer :
         return operators
 
 
-    
+    def string_identifier(self):
+        string = ""
+        quote = self.current_char()   # ' or "
+
+    # Detect triple quotes
+        if self.peek() == quote and self.peek(2) == quote:
+        # Skip opening triple quotes
+            self.advance()
+            self.advance()
+            self.advance()
+
+        # Read until closing triple quotes
+            while self.current_char() is not None:
+                if (self.current_char() == quote and
+                    self.peek() == quote and
+                    self.peek(2) == quote):
+                    self.advance()
+                    self.advance()
+                    self.advance()
+                    break
+
+                string += self.current_char()
+                self.advance()
+
+            return string
+
+    # Normal single/double quote
+        self.advance()  # skip opening quote
+
+        while self.current_char() is not None:
+            if self.current_char() == quote:
+                self.advance()  # skip closing quote
+                break
+
+            string += self.current_char()
+            self.advance()
+
+        return string
+
+                
+
 
