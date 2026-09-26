@@ -11,8 +11,8 @@ class Lexer :
             return None
         return self.text[pos]
 
-    def indexplus(self) :
-        return self.current_char(1)
+    def indexplus(self,x) :
+        return self.current_char(x) # look ahead is a flexible 
 
     def advance(self) :
         self.position += 1
@@ -61,21 +61,17 @@ class Lexer :
         string = ""
         quote = self.current_char()   # ' or "
 
-    # Detect triple quotes
-        if self.peek() == quote and self.peek(2) == quote:
-        # Skip opening triple quotes
-            self.advance()
-            self.advance()
-            self.advance()
+        if self.indexplus(1) == quote and self.indexplus(2) == quote:
+        
+            for i in range(3) : # Skip opening triple quotes
+                self.advance()
 
-        # Read until closing triple quotes
             while self.current_char() is not None:
                 if (self.current_char() == quote and
-                    self.peek() == quote and
-                    self.peek(2) == quote):
-                    self.advance()
-                    self.advance()
-                    self.advance()
+                    self.indexplus(1) == quote and
+                    self.indexplus(2) == quote):   # skip closing triple quotes
+                    for i in range(3) :
+                        self.advance()
                     break
 
                 string += self.current_char()
@@ -83,18 +79,35 @@ class Lexer :
 
             return string
 
-    # Normal single/double quote
-        self.advance()  # skip opening quote
+    
+        elif self.indexplus(1) == quote : # double qoutes
+            for i in range(2) :
+                self.advance()
 
-        while self.current_char() is not None:
-            if self.current_char() == quote:
-                self.advance()  # skip closing quote
+            while self.current_char() is not None :
+                if (self.current_char() == quote and
+                    self.indexplus(1) == quote) :
+                    for i in range(2) :
+                        self.advance()
+                    break
+
+                string += self.current_char()
+                self.advance()
+
+            return string
+
+        self.advance()
+
+        while self.current_char() is not None : # normale quote
+            if self.current_char() == quote :
+                self.advance()
                 break
 
             string += self.current_char()
             self.advance()
 
         return string
+                    
 
                 
 
