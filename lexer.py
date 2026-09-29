@@ -109,6 +109,10 @@ class Lexer :
         return string
                     
 
-                
+    def skip_comment(self) :
+        x = "#"
+        if self.current_char() == x :
+            while self.current_char() is not None and self.current_char() != "\n" :
+                self.advance()
 
-
+        return
