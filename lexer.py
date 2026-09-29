@@ -1,3 +1,5 @@
+from module import Token
+
 class Lexer :
     def __init__(self, text) :
         self.text = text
@@ -116,3 +118,36 @@ class Lexer :
                 self.advance()
 
         return
+
+
+    def get_next_token(self) :
+    
+        while self.current_char() is not None :
+
+            if self.current_char() == " " :
+                self.skip_whiteSpace()
+                continue
+
+            if self.current_char() == "#" :
+                self.skip_comment()
+                continue
+
+            if self.current_char() in ("'", '"') :
+                value = self.string_identifier()
+                return Token("string", value)
+
+            if self.current_char().isdigit() :
+                value = self.number_identifier()
+                return Token("number", value)
+
+            if self.current_char().isalpha() :
+                value = self.read_identifier()
+                return Token("Aphabet", value)
+
+            if self.current_char() in self.OPERATORS :
+                value = self.operator_identifier()
+                return Token("Operator",value)
+
+            self.advance()
+
+        return Token("EOF", None)  # End of file / no char left!
