@@ -134,15 +134,15 @@ class Lexer :
 
             if self.current_char() in ("'", '"') :
                 value = self.string_identifier()
-                return Token("string", value)
+                return Token("String", value)
 
             if self.current_char().isdigit() :
                 value = self.number_identifier()
-                return Token("number", value)
+                return Token("Number", value)
 
             if self.current_char().isalpha() :
                 value = self.read_identifier()
-                return Token("Aphabet", value)
+                return Token("Indentifier", value)
 
             if self.current_char() in self.OPERATORS :
                 value = self.operator_identifier()
@@ -151,3 +151,13 @@ class Lexer :
             self.advance()
 
         return Token("EOF", None)  # End of file / no char left!
+
+    def tokenize(self) :
+        token = self.get_next_token()
+        tokens = []
+
+        while token.type != "EOF" :
+            tokens.append(token)
+            token = self.get_next_token()
+
+        return tokens
