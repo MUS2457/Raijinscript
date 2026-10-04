@@ -124,6 +124,14 @@ class Lexer :
     
         while self.current_char() is not None :
 
+            if self.current_char() == "(":
+                self.advance()
+                return Token("LPAREN", "(")
+
+            if self.current_char() == ")":
+                self.advance()
+                return Token("RPAREN", ")")
+
             if self.current_char() == " " :
                 self.skip_whiteSpace()
                 continue
@@ -143,6 +151,7 @@ class Lexer :
             if self.current_char().isalpha() :
                 value = self.read_identifier()
                 return Token("Indentifier", value)
+
 
             if self.current_char() in self.OPERATORS :
                 value = self.operator_identifier()
