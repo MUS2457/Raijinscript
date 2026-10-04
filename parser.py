@@ -45,12 +45,12 @@ class Parser :
             self.advance()
             return expr
 
-        if token.type == "MINUS":
+        if token.type == "MINUS":  # see if number is negative
             self.advance()
             factor = self.parse_factor()
-            return BinaryOpNode(NumberNode(0), "-", factor)
+            return BinaryOpNode(NumberNode(0), "-", factor) # in math -x = 0 -x so this represente it
 
-        if token.type == "PLUS":
+        if token.type == "PLUS":  # if positive
             self.advance()
             return self.parse_factor()
 
