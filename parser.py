@@ -22,7 +22,7 @@ class Parser :
         else :
             return None
 
-    def parse_factor(self):
+    def parser_factor(self):
         token = self.current_token
 
         if token.type == "NUMBER":
@@ -55,3 +55,6 @@ class Parser :
             return self.parse_factor()
 
         raise Exception(f"Unexpected token in factor: {token}")
+
+    def parser_term(self) :
+        

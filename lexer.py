@@ -4,7 +4,20 @@ class Lexer :
     def __init__(self, text) :
         self.text = text
         self.position = 0
-        self.OPERATORS = "+-*/=<>!"
+        self.OP_SYMBOL_TO_TYPE = {
+                "+": "Plus",
+                "-": "Minus",
+                "*": "Star",
+                "**": "Power",
+                "/": "Slash",
+                "=": "Equal",
+                "==": "EqEq",
+                "!=": "NotEq",
+                "<": "Lt",
+                "<=": "Lte",
+                ">": "Gt",
+                ">=": "Gte"
+            }
 
 
     def current_char(self, offest = 0) :
@@ -45,18 +58,24 @@ class Lexer :
         return self.identifier(x)
 
     def operator_identifier(self):
-        operators = ""
+        c1 = self.current_char()
+        c2 = self.indexplus(1)
 
-        while self.current_char() is not None :
+        two_char = c1 + c2 if c2 is not None else None  # two_char become None if c2 not exit
 
-            if self.current_char() in self.OPERATORS :
-                operators += self.current_char()
-                self.advance()
+        if two_char in self.OP_SYMBOL_TO_TYPE:  #if two_chat is None its skip if block work as if False
+            op_type = self.OP_SYMBOL_TO_TYPE[two_char]
+            self.advance()
+            self.advance()
+            return (op_type, two_char)
 
-            else :
-                break
+        if c1 in self.OP_SYMBOL_TO_TYPE:
+            op_type = self.OP_SYMBOL_TO_TYPE[c1]
+            self.advance()
+            return (op_type, c1)
 
-        return operators
+        raise Exception(f"Unknown operator: {c1}")
+
 
 
     def string_identifier(self):
@@ -153,9 +172,21 @@ class Lexer :
                 return Token("Indentifier", value)
 
 
-            if self.current_char() in self.OPERATORS :
+            if self.current_char() == self.OPERATORS[0]:
                 value = self.operator_identifier()
-                return Token("Operator",value)
+                return Token("Plus",value)
+
+            if self.current_char() == self.OPERATORS[1]:
+                value = self.operator_identifier()
+                return Token("Minus",value)
+
+            if self.current_char() == self.OPERATORS[2] and self.indexplus(1) != self.OPERATORS[2] :
+                value = self.operator_identifier()
+                return Token("Star",value)
+
+            else :
+                self.advance()
+                return Token("Power", "**")
 
             self.advance()
 
