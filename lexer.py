@@ -172,22 +172,10 @@ class Lexer :
                 return Token("Indentifier", value)
 
 
-            if self.current_char() == self.OPERATORS[0]:
+            if self.current_char() in self.OP_SYMBOL_TO_TYPE :
                 value = self.operator_identifier()
-                return Token("Plus",value)
-
-            if self.current_char() == self.OPERATORS[1]:
-                value = self.operator_identifier()
-                return Token("Minus",value)
-
-            if self.current_char() == self.OPERATORS[2] and self.indexplus(1) != self.OPERATORS[2] :
-                value = self.operator_identifier()
-                return Token("Star",value)
-
-            else :
-                self.advance()
-                return Token("Power", "**")
-
+                return Token(value[0], value[1])
+            
             self.advance()
 
         return Token("EOF", None)  # End of file / no char left!
