@@ -169,7 +169,7 @@ class Lexer :
 
             if self.current_char().isalpha() :
                 value = self.read_identifier()
-                return Token("Indentifier", value)
+                return Token("Identifier", value)
 
 
             if self.current_char() in self.OP_SYMBOL_TO_TYPE :
