@@ -74,7 +74,6 @@ class Parser :
     
 
     def parser_term(self) :
-        def parser_term(self):
         # i follow mathematical operations handling (precedence):
         # *, / and ** must be grouped before + and -  ex 3*2 +2 == 6 + 2
     
@@ -94,7 +93,7 @@ class Parser :
         return node  # combine 2 nodes that are related with op
 
     
-    def parse_expression(self) :
+    def parser_expression(self) :
         node = self.parser_term() # parser_term not always return a full node like Binaryopnode
                         # if while condition didnt run parser_term == parser_fctor, output Number(5) or IdentifierNode("x")
 
@@ -110,3 +109,18 @@ class Parser :
         return node
 
                
+    def parser_assignment(self) :
+        name = ""
+
+        if self.current_token.type == "Identifier" and self.indexplus().value == "=" :
+            name += self.current_token.value
+            for i in range(2) : 
+                self.advance() # cause we have 2 condision alredy known need to skip both
+
+            right = self.parser_expression()
+            collected = AssignmentNode(name,right)
+            return collected
+
+        else :
+            node = self.parser_expression()
+            return node
