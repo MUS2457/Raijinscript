@@ -71,7 +71,13 @@ class Parser :
 
         raise Exception(f"Unexpected token in factor: {token}")
 
+    
+
     def parser_term(self) :
+        def parser_term(self):
+        # i follow mathematical operations handling (precedence):
+        # *, / and ** must be grouped before + and -  ex 3*2 +2 == 6 + 2
+    
         node = self.parse_factor()
 
         while (self.current_token is not None and self.current_token.type in ("Star", "Slash", "Power")) :
@@ -88,3 +94,19 @@ class Parser :
         return node  # combine 2 nodes that are related with op
 
     
+    def parse_expression(self) :
+        node = self.parser_term() # parser_term not always return a full node like Binaryopnode
+                        # if while condition didnt run parser_term == parser_fctor, output Number(5) or IdentifierNode("x")
+
+        while self.current_token is not None and self.current_token.type  in ("Minus", "Plus") :
+
+            op = self.current_token.value
+            self.advance()
+
+            right = self.parser_term()
+
+            node = BinaryOpNode(node, op, right)
+
+        return node
+
+               
