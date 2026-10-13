@@ -22,47 +22,69 @@ class Parser :
         else :
             return None
 
-def parse_factor(self):
-    token = self.current_token
+    def parse_factor(self):
+        token = self.current_token
 
     # Number literal
-    if token.type == "Number":
-        self.advance()
-        return NumberNode(token.value)
+        if token.type == "Number":
+            self.advance()
+            return NumberNode(token.value)
 
     # String literal
-    if token.type == "String":
-        self.advance()
-        return StringNode(token.value)
+        if token.type == "String":
+            self.advance()
+            return StringNode(token.value)
 
     # Identifier
-    if token.type == "Identifier":
-        self.advance()
-        return IdentifierNode(token.value)
+        if token.type == "Identifier":
+            self.advance()
+            return IdentifierNode(token.value)
 
     # Parenthesized expression
-    if token.type == "LPAREN":
-        self.advance()
-        expr = self.parse_expression()
+        if token.type == "LPAREN":
+            self.advance()
 
-        if self.current_token.type != "RPAREN":
-            raise Exception("Expected ')'")
+            expr = self.parse_expression()
 
-        self.advance()
-        return expr
+            if self.current_token is None or self.current_token.type != "RPAREN":
+                raise Exception("Expected ')'")
+
+            self.advance()
+            return expr
 
     # Unary minus
-    if token.type == "Minus":
-        self.advance()
-        factor = self.parse_factor()
-        return BinaryOpNode(NumberNode(0), "-", factor)
+        if token.type == "Minus":
+            self.advance()
+
+            factor = self.parse_factor()
+
+            return BinaryOpNode(
+                NumberNode(0),
+                "-",
+                factor
+            )
 
     # Unary plus
-    if token.type == "Plus":
-        self.advance()
-        return self.parse_factor()
+        if token.type == "Plus":
+           self.advance()
+           return self.parse_factor()
 
-    raise Exception(f"Unexpected token in factor: {token}")
+        raise Exception(f"Unexpected token in factor: {token}")
 
     def parser_term(self) :
-        
+        node = self.parse_factor()
+
+        while (self.current_token is not None and self.current_token.type in ("Star", "Slash", "Power")) :
+
+            op = self.current_token.value # this equal to /, *..
+            self.advance() 
+            right_node = self.parse_factor() # right node
+
+            # node stores the AST built so far, ex Number(5) can be later BinaryOpNode(5, "*", 3)
+            # Each iteration wraps the previous node into a bigger BinaryOpNode.
+
+            node = BinaryOpNode(node, op, right_node)
+
+        return node  # combine 2 nodes that are related with op
+
+    
