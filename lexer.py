@@ -180,8 +180,8 @@ class Lexer :
                 value = self.number_identifier()
                 return Token("Number", value)
 
-            if self.current_char().isalpha() :
-                value = self.read_identifier()
+            if self.current_char().isalpha() or self.current_char() == "_" :
+                value = self.identifier_variable()
                 return Token("Identifier", value)
 
 
