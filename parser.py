@@ -112,15 +112,19 @@ class Parser :
     def parser_assignment(self) :
         name = ""
 
-        if self.current_token.type == "Identifier" and self.indexplus().value == "=" :
+        while self.current_token.type == "Identifier" or self.current_token.value == "_" :
             name += self.current_token.value
-            for i in range(2) : 
-                self.advance() # cause we have 2 condision alredy known need to skip both
+            self.advance()
 
+        if name and self.current_token.type == "Equal" :
+            self.advance()
             right = self.parser_expression()
-            collected = AssignmentNode(name,right)
-            return collected
+
+            assign = AssignmentNode(name, right)
+
+            return assign
 
         else :
-            node = self.parser_expression()
-            return node
+            right = self.parser_expression
+            return right
+

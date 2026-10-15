@@ -51,6 +51,19 @@ class Lexer :
 
         return word
 
+    def identifier_variable(self, x = "isalpha") :
+        word = ""
+
+        while self.current_char() is not None :
+            if getattr(self.current_char(), x)() or self.current_char() == "_" :
+                word += self.current_char()
+                self.advance()
+
+            else :
+                break
+
+        return word
+
     def read_identifier(self, x = "isalpha") :
         return self.identifier(x)
 
